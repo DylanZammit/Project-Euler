@@ -7,7 +7,7 @@ from math import log
 
 start_time = time.time()
 
-def numberToBase(n, b=7):
+def num2base(n, b=7):
     if n == 0:
         return [0]
     digits = []
@@ -16,14 +16,26 @@ def numberToBase(n, b=7):
         n //= b
     return digits[::-1]
 
-out=0
+
+def sup(n): return n*(n+1)/2
+
+B = sup(7)
 R = 10**9
-# R=100
-#https://math.mit.edu/research/highschool/rsi/documents/2017Puig.pdf
+A = num2base(R-1)
+a = A[0]
+z = len(A)
 
-for n in range(R):
-    if n%10**5==0: print(n)
-    a = numberToBase(n)
-    out += int(np.prod([x+1 for x in a]))
+def f(x):
+    z = len(x)
+    out = B**(z-1)*(sup(x[0])-1)
 
-print(out, time.time()-start_time, 'secs')
+    for i in range(z-1):
+        T = np.prod([d+1 for d in x[:z-1-i]])*B**i
+        T *= (sup(x[-1]+1) if i==0 else sup(x[z-1-i]))
+
+        out += T
+    return out
+
+print('{}_10={}_7'.format(R, ''.join([str(x) for x in A])))
+out = B**(z-1) + f(A)
+print(int(out))
